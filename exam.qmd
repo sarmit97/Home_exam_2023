@@ -33,7 +33,7 @@ Upload your answer to mitt.uib
 
 \-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
 
-## 1. Reproducing data of cited paper 
+## 1. Reproducing data of cited paper
 
 The paper that I chose in this exercise contains 4 plots of the data they used. I chose to reproduce the following plot.
 
@@ -45,6 +45,7 @@ library(readxl) #for importing an excel sheet
 library(ggplot2) #for making a figure from the data set
 library(tidyverse) #for making the data set workable when making figures 
 library(dplyr)
+library(usethis)
 ```
 
 ```{r}
