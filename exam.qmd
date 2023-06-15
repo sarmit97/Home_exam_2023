@@ -1,0 +1,93 @@
+---
+title: "Biostats Exam 2023"
+format: html
+editor: visual
+author: Sarah Mittank
+date: today
+mainfont: "Times New Roman"
+---
+
+## **Part A - reproducibility**
+
+1.  Continue with your attempt to reproduce part of a paper from archived data from the first practical. Archive the code and text on GitHub and include the link to your repo in your answer here.
+
+    -   Make at least two commits to git.
+
+    -   Cite the original paper and data.
+
+    -   Make your reproduction as reproducible as possible (i.e. it should be possible for me to reproduce your work after cloning your repo and downloading the data).
+
+2.  Discuss how well you managed to reproduce the part of paper you were working on and what challenges you faced. If you looked at two papers discuss both.
+
+3.  Discuss what how well the original paper meets best practice for reproducibility, i.e. what should the authors have done to make their analysis more reproducible, and what they did well.
+
+## **Part B data analysis**
+
+Coming soon...
+
+**Instructions**
+
+Write in a quarto document and submit the rendered version. Make sure that any figures are included in you submission.
+
+Upload your answer to mitt.uib
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## 1. Reproducing data of cited paper 
+
+The paper that I chose in this exercise contains 4 plots of the data they used. I chose to reproduce the following plot.
+
+```{r}
+#| label: Activating functions required in this project
+
+library(here) #for reproducibility of the path of my data
+library(readxl) #for importing an excel sheet
+library(ggplot2) #for making a figure from the data set
+library(tidyverse) #for making the data set workable when making figures 
+library(dplyr)
+```
+
+```{r}
+#| label: Importing data set 
+
+warning=FALSE
+
+data <- read_xlsx(here("cod_data.xlsx"))
+
+# Citation: Freitas, C. et al. (2016) Data. Ecology and Evolution. https://doi.org/10.1002/ece3.1496
+
+```
+
+```{r}
+#| label: Tidying the data 
+
+data_long <- data |>
+  pivot_longer(cols = starts_with("Temperature"), names_to = "Line", values_to = "Value")
+#here, I needed to convert the original data into a long data set to be able to combine both Temperature columns (Temperature_1m and Temperature_19m) into one wihtout loosing their values. I did that to be able to create both lines for temperaturs at 1m and 19m in my following plot, consisting of facets. 
+
+```
+
+```{r}
+#| label: Reproduce figure of imported data set 
+#| fig-height: 6
+#| fig-width: 5
+#| fig-cap: Facet plot of raw cited data. Three plots that show the temperatures at 1m (water surface) and 19m during the different months.
+
+ggplot(data_long, aes(x = Date, y = Value, colour = Line)) +
+  geom_line() + #getting the lines in my plot 
+  facet_wrap(facets = vars(Year), scales = "free_x", ncol = 1) + #making facets for the different years
+  labs(y = "Temperature (\u00B0C)", x = "Date") + #setting the labels for x-axis and y-axis 
+  theme_classic() + #to get a similar look to the cited data 
+  theme(strip.text = element_text(size = 8),
+        strip.background = element_blank()) + #removing the facet strips and setting the size 
+  theme(legend.position = c(0.1, 1.015), 
+  legend.background = element_rect(fill = "white", colour = NA), legend.title = element_text(size =4), legend.text = element_text(size = 4)) + #setting the details for my legend so it becomes more like the legend in the cited paper 
+  scale_colour_manual(values=c('red','Blue')) #changing the default colours to the ones chosen in the figure of the cited paper 
+
+```
+
+## 2. Reproduction of data in cited paper
+
+Reproducing the figure above from the cited paper started off good. It is not the most difficult plot to understand. I managed to reproduce the same colours, the same x-axis and the same legend. However, figuring out how to create both lines for both temperature depths (1m and 19m) inside each plot of the facet, was more complicated. It was not as intuitive as it seems. I needed to convert the raw data set into a long data to be able to merge both Temperature columns so I could create both lines with each their values showing in the plot. For the x-axis ticks names, I was not able to make them say Jan 2009, April 2009 etc. Instead, I only have the months without the year. Although, that should not be the most misleading side in this plot, as I already have the year as its strip for each facet plot - as it also shows in the cited paper.
+
+In general, I was able to reproduce the plot, however it seems like I lack some data along the x-axis. When plotting the raw data, I only get 3 months along the x-axes, not 4 as it shows in the cited paper figure, meaning I lack the data points for one month in each plot.
